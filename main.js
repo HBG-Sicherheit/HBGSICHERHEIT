@@ -138,6 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 500);
                 }, 4000);
 
+                // Send event to Google Analytics
+                if (typeof gtag === 'function') {
+                    const jobTitleVal = jobTitleInput ? jobTitleInput.value : 'Allgemeine Bewerbung';
+                    gtag('event', 'bewerbung_abgesendet', {
+                        'job_title': jobTitleVal,
+                        'arbeitsort': 'Allgemein'
+                    });
+                }
+
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
@@ -248,6 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => {
                     if (response.ok) {
                         showNotification('Bewerbung erfolgreich gesendet!');
+                        
+                        // Send event to Google Analytics
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'bewerbung_abgesendet', {
+                                'job_title': payload.stelle,
+                                'arbeitsort': payload.arbeitsort
+                            });
+                        }
+
                         indeedForm.reset();
                         const fileLabelText = document.getElementById('file-upload-text');
                         if (fileLabelText) {
